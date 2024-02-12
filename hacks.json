@@ -1,0 +1,8 @@
+{
+	"name": "Luxtronik Websocket",
+	"domains": [
+		"sensor"
+	],
+	"iot_class": "local_polling",
+	"render_readme": true
+}

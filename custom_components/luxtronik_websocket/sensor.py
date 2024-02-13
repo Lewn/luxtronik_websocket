@@ -73,7 +73,7 @@ class LuxtronikEntity(CoordinatorEntity[LuxtronikCoordinator], SensorEntity):
             ),
         )
         self._attr_unique_id = f"{entry_id}-{description.key}"
-        self.entity_id = f"sensor.luxtronic_websocket_{description.key}".lower()
+        self.entity_id = f"sensor.luxtronik_websocket_{description.key}".lower()
         self.entity_description = description
         self._attr_device_info = DeviceInfo(
             entry_type=None,

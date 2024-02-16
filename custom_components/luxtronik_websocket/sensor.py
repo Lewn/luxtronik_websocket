@@ -84,5 +84,5 @@ class LuxtronikEntity(CoordinatorEntity[LuxtronikCoordinator], SensorEntity):
     @property
     def native_value(self) -> str:
         """Return the value of the sensor."""
-        value: str = self.coordinator.data[self.entity_description.key]
+        value: str = self.coordinator.data.get(self.entity_description.key, None)
         return value

@@ -62,7 +62,7 @@ class LuxtronikEntity(CoordinatorEntity[LuxtronikCoordinator], SensorEntity):
         """Initialize the Luxtronik sensor."""
         super().__init__(coordinator)
         base_name = description.key.split("_")[-1]
-        _LOGGER.warning(
+        _LOGGER.info(
             "Adding entry: %s",
             repr(
                 {

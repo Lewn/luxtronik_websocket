@@ -1,7 +1,54 @@
 """Simple websocket communication with a Luxtronik heat pump."""
 
+from collections import namedtuple
+import re
+
 from defusedxml.minidom import parseString
 from websockets.client import connect
+
+LuxValue = namedtuple("LuxValue", ["value", "unit"])
+
+UNITS = [
+    "°C",
+    " K",
+    " V",
+    " h",
+    " min",
+    " Hz",
+    " l/h",
+    " bar",
+    " %",
+    " kW",
+    " kWh",
+]
+
+time = re.compile(r"^([0-9]+):([0-9][0-9])(:[0-9][0-9])?$")
+
+
+def parseValue(value: str) -> LuxValue:
+    """Parse a value into a number and a unit."""
+    for unit in UNITS:
+        if value.endswith(unit):
+            return LuxValue(float(value[: -len(unit)]), unit.strip())
+
+    if m := time.match(value):
+        m = m.groups()
+        secs = int(m[0]) * 3600 + int(m[1]) * 60
+        if m[2] is not None:
+            secs += int(m[2][1:])
+        return LuxValue(secs, "s")
+
+    if value.endswith("h"):
+        try:
+            return LuxValue(int(value[:-1]), "h")
+        except ValueError:
+            pass
+
+    try:
+        return LuxValue(float(value), "number")
+    except ValueError:
+        pass
+    return LuxValue(value, "string")
 
 
 class LuxSocket:
@@ -62,7 +109,7 @@ class LuxSocket:
 
                     key = "_".join(reversed(key)).replace(" ", "-")
 
-                    self.data[key] = value
+                    self.data[key] = parseValue(value)
 
 
 async def main():

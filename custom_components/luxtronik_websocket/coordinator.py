@@ -8,12 +8,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import DOMAIN
-from .luxsocket import LuxSocket
+from .luxsocket import LuxSocket, LuxValue
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class LuxtronikCoordinator(DataUpdateCoordinator[dict[str, str]]):
+class LuxtronikCoordinator(DataUpdateCoordinator[dict[str, LuxValue]]):
     """Luxtronik coordinator."""
 
     def __init__(
@@ -29,7 +29,7 @@ class LuxtronikCoordinator(DataUpdateCoordinator[dict[str, str]]):
         )
         self._socket = LuxSocket(host, port, password)
 
-    async def _async_update_data(self) -> dict[str, str]:
+    async def _async_update_data(self) -> dict[str, LuxValue]:
         """Fetch luxtronik information."""
         try:
             await self._socket.get_data()
@@ -40,8 +40,8 @@ class LuxtronikCoordinator(DataUpdateCoordinator[dict[str, str]]):
 
         return self._socket.data
 
-    async def get_keys(self):
-        """Get sensor keys fetched from Luxtronik."""
+    async def get_items(self):
+        """Get sensor items fetched from Luxtronik."""
         if self._socket.data is None:
             await self._socket.get_data()
-        return self._socket.data.keys()
+        return self._socket.data.items()

@@ -29,7 +29,10 @@ def parseValue(value: str) -> LuxValue:
     """Parse a value into a number and a unit."""
     for unit in UNITS:
         if value.endswith(unit):
-            return LuxValue(float(value[: -len(unit)]), unit.strip())
+            try:
+                return LuxValue(float(value[: -len(unit)]), unit.strip())
+            except ValueError:
+                return LuxValue(None, unit.strip())
 
     if m := time.match(value):
         m = m.groups()

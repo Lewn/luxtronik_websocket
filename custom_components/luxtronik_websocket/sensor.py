@@ -119,7 +119,7 @@ class LuxtronikEntity(CoordinatorEntity[LuxtronikCoordinator], SensorEntity):
     def native_value(self) -> float | str:
         """Return the value of the sensor."""
         value: LuxValue = self.coordinator.data.get(self.entity_description.key, None)
-        if value is None:
+        if value is None or value.value is None:
             return None
         if self._conversion:
             return self._conversion * value.value

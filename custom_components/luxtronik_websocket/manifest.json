@@ -12,7 +12,7 @@
   "homekit": {},
   "iot_class": "local_polling",
   "requirements": [
-    "websockets==12",
+    "websockets==14",
     "defusedxml==0.7"
   ],
   "ssdp": [],
